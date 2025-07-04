@@ -1,21 +1,22 @@
+// src/screens/Auth/LoginScreen.js
 import React from 'react';
-import { 
-    GluestackUIProvider, Box, VStack, Text, Input, InputField, Button, ButtonText, Link, Center, HStack
+import {
+  Box, VStack, Text, Input, InputField, Button, ButtonText,
+  Link, Center, HStack, GluestackUIProvider
 } from '@gluestack-ui/themed';
 import { config } from '@gluestack-ui/config';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useLoginForm } from '../../hooks/useLoginForm';
 
-export default function LoginScreen() {
- const { 
-  usuario, password, errorUsuario, errorPassword, onUsuarioChange, onPasswordChange, onLogin
-} = useLoginForm(navigation);
+export default function LoginScreen({ setIsAuthenticated }) {
+  const {
+    usuario, password, errorUsuario, errorPassword, onUsuarioChange, onPasswordChange, onLogin
+  } = useLoginForm(setIsAuthenticated);
 
   return (
     <GluestackUIProvider config={config}>
       <Box flex={1} bg="#3f6a95" justifyContent="center" alignItems="center" px="$4">
         <Box bg="$white" p="$6" borderRadius="$2xl" width="100%" maxWidth={380} shadowColor="#000" shadowOpacity={0.1}>
-          
           <Center mb="$4">
             <FontAwesome5 name="dumbbell" size={28} color="#3670ad" />
             <Text fontSize="$xl" color="#3670ad" bold>GIMNASIO</Text>
@@ -38,15 +39,13 @@ export default function LoginScreen() {
                   keyboardType="numeric"
                 />
               </Input>
-              {errorUsuario ? <Text color="red" mt="$1">{errorUsuario}</Text> : null}
+              {errorUsuario ? <Text color="red">{errorUsuario}</Text> : null}
             </Box>
 
             <Box>
               <HStack justifyContent="space-between" mb="$1">
                 <Text color="$coolGray700">Contraseña:</Text>
-                <Link>
-                  <Text fontSize="$sm" color="$blue600">Olvidé mi contraseña</Text>
-                </Link>
+                <Link><Text fontSize="$sm" color="$blue600">Olvidé mi contraseña</Text></Link>
               </HStack>
               <Input isInvalid={!!errorPassword}>
                 <InputField
@@ -56,15 +55,11 @@ export default function LoginScreen() {
                   secureTextEntry
                 />
               </Input>
-              {errorPassword ? <Text color="red" mt="$1">{errorPassword}</Text> : null}
+              {errorPassword ? <Text color="red">{errorPassword}</Text> : null}
             </Box>
 
             <Button size="md" bg="#17a2b8" borderRadius="$lg" onPress={onLogin}>
               <ButtonText color="white">Ingresar</ButtonText>
-            </Button>
-
-            <Button variant="outline" borderColor="$coolGray300" onPress={() => console.log('Volver')}>
-              <ButtonText color="$coolGray700">Volver</ButtonText>
             </Button>
           </VStack>
         </Box>

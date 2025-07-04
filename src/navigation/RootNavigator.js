@@ -1,33 +1,34 @@
-
+// src/navigation/RootNavigator.js
 import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import AuthNavigation from './AuthNavigation';
-import AppNavigation from './AppNavigation';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ActivityIndicator, View } from 'react-native';
+
+import AppNavigation  from './AppNavigation';
+import LoginScreen    from '../screens/Auth/LoginScreen';
+
+const Stack = createNativeStackNavigator();
 
 export default function RootNavigator() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
-    const checkToken = async () => {
+    (async () => {
       const token = await AsyncStorage.getItem('access_token');
       setIsAuthenticated(!!token);
-    };
-    checkToken();
+    })();
   }, []);
 
-  if (isAuthenticated === null) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  if (isAuthenticated === null) return null;
 
   return (
-    <NavigationContainer>
-      {isAuthenticated ? <AppNavigation /> : <AuthNavigation />}
-    </NavigationContainer>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Login">
+        {props => <LoginScreen {...props} setIsAuthenticated={setIsAuthenticated} />}
+      </Stack.Screen>
+
+      <Stack.Screen name="AppNavigation">
+        {props => <AppNavigation {...props} setIsAuthenticated={setIsAuthenticated} />}
+      </Stack.Screen>
+    </Stack.Navigator>
   );
 }
